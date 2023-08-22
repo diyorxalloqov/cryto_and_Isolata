@@ -1,20 +1,25 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:typed_data';
+
+import 'package:flutter/foundation.dart';
 
 Future<void> main(List<String> args) async {
   ReceivePort receivePort = ReceivePort();
 
-  final isolate1 = await Isolate.spawn(getCurrency, receivePort.sendPort);
-  final isolate2 = await Isolate.spawn(readFile, receivePort.sendPort);
+  compute(getCurrency, receivePort.sendPort);
+  compute(readFile, receivePort.sendPort);
 
-  final result = await receivePort.take(2).toList();
-  print(result.first);
-  print(result[1]);
 
-  isolate1.kill();
-  isolate2.kill();
+  // final isolate1 = await Isolate.spawn(getCurrency, receivePort.sendPort);
+  // final isolate2 = await Isolate.spawn(readFile, receivePort.sendPort);
+
+  // final result = await receivePort.take(2).toList();
+  // print(result.first);
+  // print(result[1]);
+
+  // isolate1.kill();
+  // isolate2.kill();
 }
 
 Future<void> getCurrency(SendPort sendPort) async {
